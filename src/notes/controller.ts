@@ -25,11 +25,11 @@ export const create: RequestHandler = async (req, res) => {
   const body = req.body
   try {
     const note = await notes.create(body)
-    res.status(201).send(note)
+    return res.status(201).send(note)
   } catch (err) {
     // TODO generic error handler
     console.error(err)
-    res.send(500)
+    return res.sendStatus(500)
   }
 }
 
@@ -46,11 +46,11 @@ export const update: RequestHandler = async (req, res) => {
   } catch (err) {
     // TODO generic error handler
     console.error(err)
-    res.send(500)
+    res.sendStatus(500)
   }
 }
 
-export const deletenote: RequestHandler = async (req, res) => {
+export const deleteNote: RequestHandler = async (req, res) => {
   const id = req.params.id
   try {
     await notes.findOneAndRemove({ _id: id })
@@ -58,6 +58,6 @@ export const deletenote: RequestHandler = async (req, res) => {
   } catch (err) {
     // TODO generic error handler
     console.error(err)
-    res.send(500)
+    res.sendStatus(500)
   }
 }

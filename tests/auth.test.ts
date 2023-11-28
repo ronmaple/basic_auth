@@ -1,5 +1,4 @@
 import axios from './utils/axios'
-import User from '../src/auth/model'
 
 describe('auth.test.ts', () => {
   beforeAll(async () => {
@@ -31,7 +30,7 @@ describe('auth.test.ts', () => {
     expect(response.data.username).toEqual(params.username)
   })
 
-  it.only('should attach a JWT token on POST /auth/login', async () => {
+  it('should attach a JWT token on POST /auth/login', async () => {
     const params = {
       username: 'ronmap',
       password: 'mysecret',
@@ -52,7 +51,6 @@ describe('auth.test.ts', () => {
       // if this evaluates, then the test fails
       expect(false).toBe(true)
     } catch (err: any) {
-      console.log(err)
       expect(err.response.status).toEqual(404)
     }
   })
@@ -67,8 +65,26 @@ describe('auth.test.ts', () => {
       // if this evaluates, then the test fails
       expect(false).toBe(true)
     } catch (err: any) {
-      console.log(err)
       expect(err.response.status).toEqual(404)
+    }
+  })
+
+  it('should not allow access to a protected resource if not logged in', async () => {
+    const params = {
+      author: 'ron',
+      body: 'Hello',
+      completed: false,
+    }
+    try {
+      await axios.post('/notes', params, {
+        headers: {
+          Cookie: 'jwt=wrong',
+        },
+      })
+      // if this evaluates, then the test fails
+      expect(false).toBe(true)
+    } catch (error: any) {
+      expect(error.response.status).toEqual(401)
     }
   })
 
