@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import healthRoute from './health/routes'
 import notesRoute from './notes/routes'
 import authRoutes from './auth/routes'
+import { rateLimit } from './ratelimit/middlewares'
 import { authenticate } from './auth/middlewares'
 
 const app = express()
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 app.use('/', healthRoute)
-app.use('/notes', authenticate, notesRoute)
+app.use('/notes', rateLimit, authenticate, notesRoute)
 app.use('/auth', authRoutes)
 
 // TODO: winston or another logger
