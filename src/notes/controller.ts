@@ -1,7 +1,6 @@
 import { Response, Request } from 'express'
 import notes from './model'
 
-// TODO: generalize and add to types file?
 interface RequestHandler {
   (req: Request, res: Response): Promise<Response | any>
 }
@@ -14,6 +13,25 @@ export const get: RequestHandler = async (req, res) => {
       return res.status(404).send('Not Found')
     }
     res.send(note)
+  } catch (err) {
+    // TODO generic error handler
+    console.error(err)
+    res.status(500).send(err)
+  }
+}
+
+export const search: RequestHandler = async (req, res) => {
+  const query = req.query.q
+  try {
+    // alternatively, either pull all the notes if no filter, or add filter if provided
+    if (!query) {
+      return res.status(404).send('Not Found')
+    }
+    const results = await notes.find({ body: { $regex: query } })
+    if (!results || !results.length) {
+      return res.status(404).send('Not Found')
+    }
+    res.send({ data: results })
   } catch (err) {
     // TODO generic error handler
     console.error(err)
