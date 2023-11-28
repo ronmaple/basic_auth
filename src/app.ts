@@ -3,15 +3,16 @@ import mongoose from 'mongoose'
 import healthRoute from './health/routes'
 import notesRoute from './notes/routes'
 import authRoutes from './auth/routes'
+import { rateLimit } from './ratelimit/middlewares'
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/', healthRoute)
-app.use('/notes', notesRoute)
+app.use('/notes', rateLimit, notesRoute)
 app.use('/auth', authRoutes)
 
 // TODO: winston or another logger

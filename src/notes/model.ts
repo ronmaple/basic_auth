@@ -1,16 +1,17 @@
 import mongoose, { Schema } from 'mongoose'
 
 const noteSchema = new Schema({
-  author: String,
+  author: String, // TODO: Link to an ID of a user
+  // accessControl: {} // TODO: add access control
   body: String,
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   completed: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const note = mongoose.model('note', noteSchema)
