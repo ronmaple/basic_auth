@@ -5,6 +5,14 @@ enum Roles {
   Basic = 'Basic'
 }
 
+export type User = {
+  id: string
+  _id: string
+  username: string
+  password: string
+  role: Roles
+}
+
 const userSchema = new Schema({
   username: {
     type: String,

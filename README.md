@@ -25,7 +25,23 @@
 5. redis or in memory cache TODO (rate limit)
 
 ## Setup
-1. If mongodb is already configured, run your own
-2. Otherwise, this is dependent on docker `docker compose up -d`
-3. You can view your tables on `localhost:8081`
 
+### Requirements:
+1. Local installation of MongoDB or Docker
+2. Node `v20.7.0`, but `16 >=` will probably work the same for this purpose
+
+Step #1:
+1. If mongodb is running locally, then it's good to go.
+2. Otherwise, this project was setup with Docker (I have a personal boilerplate that I re-used).
+3. `docker compose up -d`
+4. You can view your tables on `localhost:8081`
+
+
+
+### Decisions and tradeoffs
+
+1. Test-only endpoint `/auth/purge`
+- Risky in a real application, but this simplifies development for a demo-type app
+
+2. JWT Token issued only at login
+- We can do it at registration as well, but here, I only did it at login. The decision depends on the frontend implementation and overall security consideraitons of having multiple sources.

@@ -1,6 +1,7 @@
 import { Response, Request } from 'express'
 import User from './model'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 // TODO: error type
 // TODO: error codes
@@ -9,15 +10,13 @@ interface RequestHandler {
   (req: Request, res: Response): Promise<Response | any>
 }
 
+const jwtSecret = process.env.JWT_SECRET || 'mysecret'
 const saltRounds = 10
+
 export const register: RequestHandler = async (req, res) => {
   const body = req.body
   try {
-    // part A:
-    // 1. check if username is taken
-    // 2. create username and password
-    // 2a. hash password
-    const existingUser = await User.findOne({ username: body.username })  
+    const existingUser = await User.findOne({ username: body.username })
     if (existingUser) {
       throw new Error('Username already taken')
     }
@@ -25,13 +24,13 @@ export const register: RequestHandler = async (req, res) => {
     const hashedPassword = await bcrypt.hash(body.password, saltRounds)
     const user = await User.create({
       username: body.username,
-      password: hashedPassword
+      password: hashedPassword,
     })
 
     res.status(200).send(user)
   } catch (err: any) {
     if (err.message === 'Username already taken') {
-      return res.status(409).send({ message: err.message } )
+      return res.status(409).send({ message: err.message })
     }
     return res.send(500)
   }
@@ -50,6 +49,17 @@ export const login: RequestHandler = async (req, res) => {
       throw new Error('Not Found')
     }
 
+    const maxAge = 60 * 60 * 24 // 24hrs in seconds
+    const token = jwt.sign(
+      {
+        id: existingUser._id,
+        username: existingUser.username,
+        role: existingUser.role,
+      },
+      jwtSecret,
+      { expiresIn: maxAge }
+    )
+    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
     res.status(200).send(existingUser)
   } catch (err: any) {
     if (err.message === 'Not Found') {

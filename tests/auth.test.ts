@@ -31,6 +31,17 @@ describe('auth.test.ts', () => {
     expect(response.data.username).toEqual(params.username)
   })
 
+  it.only('should attach a JWT token on POST /auth/login', async () => {
+    const params = {
+      username: 'ronmap',
+      password: 'mysecret',
+    }
+    await axios.post('/auth/signup', params)
+    const response = await axios.post('/auth/login', params)
+    expect(response.status).toEqual(200)
+    expect(response.headers['set-cookie']?.[0]).toContain('jwt=')
+  })
+
   it('should throw Not Found error if user does not exist on POST /auth/login', async () => {
     const params = {
       username: 'ronmap2',
