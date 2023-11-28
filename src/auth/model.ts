@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose'
 
-enum Roles {
+export enum Roles {
   Admin = 'Admin',
-  Basic = 'Basic'
+  Basic = 'Basic',
 }
 
 export type User = {

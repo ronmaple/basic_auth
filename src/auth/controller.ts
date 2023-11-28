@@ -3,15 +3,14 @@ import User from './model'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-// TODO: error type
+import { jwtSecret, saltRounds } from './config'
+
+// TODO: error types
 // TODO: error codes
 
 interface RequestHandler {
   (req: Request, res: Response): Promise<Response | any>
 }
-
-const jwtSecret = process.env.JWT_SECRET || 'mysecret'
-const saltRounds = 10
 
 export const register: RequestHandler = async (req, res) => {
   const body = req.body

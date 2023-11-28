@@ -1,17 +1,21 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
+
 import healthRoute from './health/routes'
 import notesRoute from './notes/routes'
 import authRoutes from './auth/routes'
+import { authenticate } from './auth/middlewares'
 
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.use('/', healthRoute)
-app.use('/notes', notesRoute)
+app.use('/notes', authenticate, notesRoute)
 app.use('/auth', authRoutes)
 
 // TODO: winston or another logger
@@ -30,7 +34,7 @@ const server = async () => {
   }
 
   app.listen(port, () => {
-    console.log(`🚀 Typescript Starter Kit running on port:: ${port}`)
+    console.log(`🚀 App running on port:: ${port}`)
   })
 }
 
