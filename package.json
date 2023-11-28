@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "rimraf ./build && tsc",
-    "test": "jest"
+    "test": "jest notes.test.ts"
   },
   "keywords": [],
   "author": "",
