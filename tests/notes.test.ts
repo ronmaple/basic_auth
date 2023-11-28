@@ -1,16 +1,25 @@
 import axios from './utils/axios'
+import { getToken } from './utils/auth'
 
-describe('note.test.ts', () => {
-  // Can add a route or direct import to purge database
-  // but sometimes it's nice to use tests as a seeder
+describe('notes.test.ts', () => {
+  let token
+  let headers: any = {}
+  beforeAll(async () => {
+    await axios.delete('/auth/purge')
+    token = await getToken()
+    headers.Cookie = `jwt=${token}`
+  })
+  afterAll(async () => {
+    await axios.delete('/auth/purge')
+  })
 
   it('should create note on POST /notes', async () => {
     const params = {
-      author: 'ron', // todo
+      author: 'ron',
       body: 'Hello',
       completed: false,
     }
-    const response = await axios.post('/notes', params)
+    const response = await axios.post('/notes', params, { headers })
     expect(response.data.author).toEqual('ron')
     expect(response.data.body).toEqual('Hello')
     expect(response.data.completed).toEqual(false)
@@ -22,11 +31,11 @@ describe('note.test.ts', () => {
       body: 'Hello',
       completed: false,
     }
-    let response = await axios.post('/notes', params)
+    let response = await axios.post('/notes', params, { headers })
     expect(response.status).toEqual(201)
 
     const id = response.data._id
-    response = await axios.get(`/notes/${id}`)
+    response = await axios.get(`/notes/${id}`, { headers })
     expect(response.status).toEqual(200)
     expect(response.data._id).toEqual(id)
     expect(response.data.author).toEqual('ron')
@@ -40,11 +49,11 @@ describe('note.test.ts', () => {
       body: 'Hello',
       completed: false,
     }
-    let response = await axios.post('/notes', params)
+    let response = await axios.post('/notes', params, { headers })
     expect(response.status).toEqual(201)
 
     const id = response.data._id
-    response = await axios.put(`/notes/${id}`, { body: 'Changed' })
+    response = await axios.put(`/notes/${id}`, { body: 'Changed' }, { headers })
     expect(response.status).toEqual(200)
     expect(response.data._id).toEqual(id)
     expect(response.data.author).toEqual('ron')
@@ -58,11 +67,11 @@ describe('note.test.ts', () => {
       body: 'Hello',
       completed: false,
     }
-    let response = await axios.post('/notes', params)
+    let response = await axios.post('/notes', params, { headers })
     expect(response.status).toEqual(201)
 
     const id = response.data._id
-    response = await axios.delete(`/notes/${id}`)
+    response = await axios.delete(`/notes/${id}`, { headers })
     expect(response.status).toEqual(204)
   })
 })

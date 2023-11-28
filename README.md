@@ -37,7 +37,6 @@ Step #1:
 4. You can view your tables on `localhost:8081`
 
 
-
 ### Decisions and tradeoffs
 
 1. Test-only endpoint `/auth/purge`
@@ -45,3 +44,15 @@ Step #1:
 
 2. JWT Token issued only at login
 - We can do it at registration as well, but here, I only did it at login. The decision depends on the frontend implementation and overall security consideraitons of having multiple sources.
+
+3. Only 1 role set up (`Basic`)
+
+### Improvements
+- Global error handlers
+- Separate databases for Users, Notes, cache
+- Better handling of Roles and permissions
+
+#### Testing:
+- Global test User
+- Improve jest environment (ie direct test DB access)
+  
