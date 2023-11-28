@@ -14,8 +14,9 @@
 3. PUT `/:id`
 4. DELETE `/:id`
 
-### Rate limit
-1. TODO
+### Rate Limit
+### Mongodb regex search
+
 
 ### Tech
 1. Typescript
@@ -62,4 +63,4 @@ To run the (integration) test:
 
 2. Incomplete `share` function. I would complete an `accessControl` pattern for the resource. Right now `author` is hard coded, but it can be added via the user from the middleware.
   
-3. The keyword search is tricky -- it depends on the scale. This uses mongodb regex search which is low performant in comparison to ElasticSearch, which I can implement, but it'll require design changes
+3. The keyword search is tricky -- it depends on the scale. This uses mongodb regex search which is low performant and potentially insecure, in comparison to ElasticSearch.
